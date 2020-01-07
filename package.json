@@ -18,7 +18,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "semantic-release": "semantic-release",
-    "prepack": "npm run build"
+    "postinstall": "npm run build"
   },
   "license": "MIT",
   "author": "w3tec.ch <info@w3tec.ch>",
