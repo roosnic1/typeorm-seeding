@@ -3,6 +3,7 @@ import { Connection, ObjectType } from 'typeorm'
 import { FactoryFunction, EntityProperty } from './types'
 import { isPromiseLike } from './utils/factory.util'
 import { printError } from './utils/log.util'
+import * as moment from 'moment'
 
 export class EntityFactory<Entity, Settings> {
   private mapFunction: (entity: Entity) => Promise<Entity>
@@ -97,7 +98,11 @@ export class EntityFactory<Entity, Settings> {
           entity[attribute] = await entity[attribute]
         }
 
-        if (typeof entity[attribute] === 'object' && !(entity[attribute] instanceof Date)) {
+        if (
+          typeof entity[attribute] === 'object' &&
+          !(entity[attribute] instanceof Date) &&
+          !moment.isMoment(entity[attribute])
+        ) {
           const subEntityFactory = entity[attribute]
           try {
             if (typeof (subEntityFactory as any).make === 'function') {

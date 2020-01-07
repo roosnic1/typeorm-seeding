@@ -1,4 +1,5 @@
 import { EntityFactory } from './entity-factory'
+import * as moment from 'moment'
 
 describe('make', () => {
   // tslint:disable-next-line
@@ -8,6 +9,10 @@ describe('make', () => {
   // tslint:disable-next-line
   class Pet {
     constructor(public name: string, public user: User) {}
+  }
+  //tslint:disable-next-line
+  class Event {
+    constructor(public name: string, public date: moment.Moment) {}
   }
 
   test('Should make a new entity', async () => {
@@ -62,5 +67,16 @@ describe('make', () => {
 
     expect(newUsers.length).toBe(2)
     expect(mockMap).toBeCalledTimes(2)
+  })
+
+  test('Should not call make on Moment objects', async () => {
+    const mockEventFactory = jest.fn()
+    const eventFactory = new EntityFactory('Event', Event, mockEventFactory)
+    console.log('moment', moment())
+    mockEventFactory.mockReturnValue(new Event('Steve', moment()))
+
+    const newEvent = await eventFactory.make()
+
+    expect(moment.isMoment(newEvent.date)).toBe(true)
   })
 })
